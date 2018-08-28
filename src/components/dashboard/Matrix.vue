@@ -50,7 +50,8 @@ import TodoListItem from './TodoListItem.vue'
 import TodoListInput from './TodoListInput.vue'
 import axios from 'axios'
 
-const baseURL = 'http://localhost:3000/'
+// TODO: make this a const through the application depending on the ENV
+const baseURL = 'https://todo-matrix-server.herokuapp.com/'
 
 export default {
   name: 'Matrix',
