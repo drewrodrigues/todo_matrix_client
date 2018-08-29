@@ -2,10 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
 import Router from 'vue-router'
+import Icon from 'vue-awesome/components/Icon'
+import 'vue-awesome/icons'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(Router)
+Vue.component('icon', Icon)
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
