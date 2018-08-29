@@ -1,48 +1,34 @@
 <template lang="pug">
-  div
-    table.table.table-bordered
-      tr
-        td.bg-success 
-          span Important & Urgent
-          span.float-right.badge.badge-light(v-text="incompleteTodosWithPriority(1) + ' left'")
-        td.table-success 
-          span Important & Not Urgent
-          span.float-right.badge.badge-light(v-text="incompleteTodosWithPriority(2) + ' left'")
-      tr
-        each i in [1, 2]
-          td
-            span(v-for="(todo, index) in getTodosWithPriority("+ i + ")")
-              TodoListItem(
-                :id="todo.id",
-                :title="todo.title",
-                :content="todo.content",
-                :complete="todo.complete",
-                @delete="deleteTodo(todo.id, index)"
-              )
-            TodoListInput(
-              @add="addTodo($event.text, " + i + ")" 
-            )
-      tr
-        td.bg-danger
-          span Not Important & Urgent
-          span.float-right.badge.badge-light(v-text="incompleteTodosWithPriority(3) + ' left'")
-        td.table-danger
-          span Not Important & Not Urgent
-          span.float-right.badge.badge-light(v-text="incompleteTodosWithPriority(4) + ' left'")
-      tr
-        each i in [3, 4]
-          td
-            span(v-for="(todo, index) in getTodosWithPriority("+ i + ")")
-              TodoListItem(
-                :id="todo.id",
-                :title="todo.title",
-                :content="todo.content",
-                :complete="todo.complete",
-                @delete="deleteTodo(todo.id, index)"
-              )
-            TodoListInput(
-              @add="addTodo($event.text, " + i + ")" 
-            )
+  - // FIXME: how do we spread this over multiple lines?
+  - const matrixBlocks = [{title: 'Important & Urgent', priority: 1, className: 'bg-primary', buttonClassName: 'btn-primary'}]
+  - matrixBlocks.push({title: 'Important & Not Urgent', priority: 2, className: 'bg-success', buttonClassName: 'btn-success'})
+  - matrixBlocks.push({title: 'Not Important & Urgent', priority: 3, className: 'bg-warning', buttonClassName: 'btn-warning'})
+  - matrixBlocks.push({title: 'Not Important & Not Urgent', priority: 4, className: 'bg-danger', buttonClassName: 'btn-danger'})
+
+  div#matrix
+    .container-fluid
+      .row
+        for block in matrixBlocks
+          .col-md-6
+            .card
+              .card-header.text-white(class=block.className)
+                span= block.title
+                //- TODO: review the interpolation here
+                span.float-right.badge.badge-light(v-text=`incompleteTodosWithPriority(${block.priority}) + ' left'`)
+              .card-body
+                ul.list-group
+                  TodoListItem(
+                    v-for="(todo, index) in getTodosWithPriority("+ block.priority + ")"
+                    :id="todo.id",
+                    :title="todo.title",
+                    :content="todo.content",
+                    :complete="todo.complete",
+                    @delete="deleteTodo(todo.id, index)"
+                  )
+                TodoListInput(
+                  buttonClassName=`${block.buttonClassName}`,
+                  @add="addTodo($event.text, " + block.priority + ")"
+                )
 </template>
 
 <script>
@@ -51,6 +37,8 @@ import TodoListInput from './TodoListInput.vue'
 import axios from 'axios'
 
 // TODO: make this a const through the application depending on the ENV
+// FIXME: bug with deleting components. When deleting an element on production
+// a different component is deleted, even though the correct record is deleted
 const baseURL = 'https://todo-matrix-server.herokuapp.com/'
 
 export default {
@@ -117,4 +105,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+#matrix {
+  margin-top: 20px;
+}
+.card {
+  margin-bottom: 20px;
+}
 </style>

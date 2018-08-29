@@ -20,6 +20,7 @@ export default {
 </script>
 
 <style lang="scss">
+// TODO: add transition in and out
 </style>
 
 
