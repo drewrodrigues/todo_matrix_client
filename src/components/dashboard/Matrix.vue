@@ -36,11 +36,6 @@ import TodoListItem from './TodoListItem.vue'
 import TodoListInput from './TodoListInput.vue'
 import axios from 'axios'
 
-// TODO: make this a const through the application depending on the ENV
-// FIXME: bug with deleting components. When deleting an element on production
-// a different component is deleted, even though the correct record is deleted
-const baseURL = 'https://todo-matrix-server.herokuapp.com/'
-
 export default {
   name: 'Matrix',
 
@@ -56,7 +51,7 @@ export default {
   },
 
   created() {
-    axios.get(baseURL + 'todos')
+    axios.get(process.env.VUE_APP_ROOT_API + '/todos')
     .then(res => {
       this.todos = res.data;
     })
@@ -75,7 +70,7 @@ export default {
     },
 
     addTodo: function(todo, priority) {
-      axios.post(baseURL + 'todos', {
+      axios.post(process.env.VUE_APP_ROOT_API + '/todos', {
         title: todo,
         priority: priority
       })
@@ -92,7 +87,7 @@ export default {
       // FIXME: bug when opening dropDownMenu or editMenu, then deleting the todo
       // the todo below it will then have the same component data, making it where
       // the menus are still open
-      axios.delete(baseURL + 'todos/' + id)
+      axios.delete(process.env.VUE_APP_ROOT_API + '/todos/' + id)
       .then(res => {
         this.$delete(this.todos, index)
         this.$emit('add-flash', "Successfully <b>deleted</b> item", "success")
